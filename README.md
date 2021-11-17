@@ -1,5 +1,9 @@
 #ISIS1225 - Librerias de soporte
 
+Estudiante 1: Sofia Torres Ramírez - 202014872 - s.torres21@uniande.edu.co
+Estudiante 2: Ana Margarita Florez - 201922242 - a.florezr@uniandes.edu.co
+
+
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
 -Lib

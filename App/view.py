@@ -36,22 +36,47 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("0- Cargar información en el catálogo")
+    print("1- Encontrar puntos de interconexión aérea ")
+    print("2- Encontrar clústeres de tráfico aéreo" )
+    print("3- Encontrar la ruta más corta entre ciudades")
+    print("4- Utilizar las millas de viajero")
+    print("5- CUantificar el efecto de un aeropuerto cerrado")
 
 catalog = None
 
+def optionOne(cont):
+
+def optionTwo(cont):
+
+def optionThree(cont):
+
+def optionFour(cont):
+
+def optionFive(cont):
 """
 Menu principal
 """
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
+    if int(inputs[0]) == 0:
         print("Cargando información de los archivos ....")
+        cont = controller.init()
+    elif int(inputs[0]) == 1:
+        optionOne(cont)
 
     elif int(inputs[0]) == 2:
-        pass
+        optionTwo(cont)
+
+    elif int(inputs[0]) == 3:
+        optionThree(cont)
+    
+    elif int(inputs[0]) == 4:
+        optionFour(cont)
+
+    elif int(inputs[0]) == 5:
+        optionFive(cont)
 
     else:
         sys.exit(0)
