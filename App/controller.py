@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+import time as time
 
 
 """
@@ -30,9 +31,16 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
+def init():
+    analizer=model.newAnalizer()
+    return analizer
+
 
 # Funciones para la carga de datos
 
+def loadDataAirp (analyzer, airportsfile):
+    airportsfile=cf.data_dir+airportsfile
+    input_file =csv.DictReader(open())
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

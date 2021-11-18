@@ -25,8 +25,13 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import threading
 
+airportsfile = 'airports_full.csv'
+routesfile= 'routes_full.csv'
+citiesfile='worldcities.csv'
 
+initialStation = None
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -44,6 +49,12 @@ def printMenu():
     print("5- CUantificar el efecto de un aeropuerto cerrado")
 
 catalog = None
+def optionCero(cont):
+    print("\nCargando información ....")
+    controller.loadDataAirp(cont,airportsfile)
+    numairports=controller.totalairports(cont)
+    numroutes=controller.totalroutes(cont)
+
 
 def optionOne(cont):
 
@@ -63,6 +74,7 @@ while True:
     if int(inputs[0]) == 0:
         print("Cargando información de los archivos ....")
         cont = controller.init()
+        optionCero (cont)
     elif int(inputs[0]) == 1:
         optionOne(cont)
 
