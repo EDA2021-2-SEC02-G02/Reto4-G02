@@ -32,15 +32,27 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 def init():
-    analizer=model.newAnalizer()
-    return analizer
+    analyzer=model.newAnalizer()
+    return analyzer
 
 
 # Funciones para la carga de datos
 
 def loadDataAirp (analyzer, airportsfile):
     airportsfile=cf.data_dir+airportsfile
-    input_file =csv.DictReader(open())
+    input_file =csv.DictReader(open(airportsfile, encoding="utf-8"),
+                                delimiter=",")
+    lastairport = None
+    for airport in input_file:
+        if lastairport is not None:
+            sameairport = lastairport['IATA'] == airport['IATA']
+            #de aquí
+            if sameairport and samedirection and not samebusStop:
+                #hasta aquí
+                model.addStopConnection(analyzer, lastservice, airport)
+        lastservice = service
+    model.addRouteConnections(analyzer)
+    return analyzer
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

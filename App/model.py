@@ -51,17 +51,17 @@ def newAnalizer():
                     }
         analyzer['airports_no_directed']=gr.newGraph(datastructure='ADJ_LIST',
                                                     directed=False,
-                                                    size=10,
+                                                    size=8996,
                                                     comparefunction=compareAirports)
 
         analyzer['airports_directed']=gr.newGraph(datastructure='ADJ_LIST',
                                                     directed=True,
-                                                    size=10,
+                                                    size=8996,
                                                     comparefunction=compareAirports)
 
         analyzer['cities_from_airport']=gr.newGraph(datastructure='ADJ_LIST',
                                                     directed=True,
-                                                    size=10,
+                                                    size=46494,
                                                     comparefunction=compareCities)                                          
         return analyzer
     except Exception as exp:
@@ -85,7 +85,21 @@ def compareCities(id,city):
 
 # Funciones para agregar informacion al catalogo
 
-def add 
+def addAirportconnection(analyzer, lastairport, airport):
+    try:
+        origin = formatVertex(lastairport)
+        destination = formatVertex(airport)
+        cleanAirportDistance(lastairport, airport)
+        distance = float(service['Distance']) - float(lastservice['Distance'])
+        distance = abs(distance)
+        addStop(analyzer, origin)
+        addStop(analyzer, destination)
+        addConnection(analyzer, origin, destination, distance)
+        addRouteStop(analyzer, service)
+        addRouteStop(analyzer, lastservice)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addStopConnection')
 # Funciones para creacion de datos
 
 # Funciones de consulta
