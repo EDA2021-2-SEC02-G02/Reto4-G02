@@ -87,19 +87,44 @@ def compareCities(id,city):
 
 def addAirportconnection(analyzer, lastairport, airport):
     try:
-        origin = formatVertex(lastairport)
-        destination = formatVertex(airport)
-        cleanAirportDistance(lastairport, airport)
-        distance = float(service['Distance']) - float(lastservice['Distance'])
-        distance = abs(distance)
+        origin=airport['IATA']
         addStop(analyzer, origin)
-        addStop(analyzer, destination)
-        addConnection(analyzer, origin, destination, distance)
-        addRouteStop(analyzer, service)
-        addRouteStop(analyzer, lastservice)
+        
+        #addRouteStop(analyzer, service)
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addStopConnection')
+
+def addRouteConnections(analyzer, routes):
+    """
+    Por cada vertice (cada estacion) se recorre la lista
+    de rutas servidas en dicha estación y se crean
+    arcos entre ellas para representar el cambio de ruta
+    que se puede realizar en una estación.
+    """
+    #lststops = m.keySet(analyzer['stops'])
+    try:
+        origin=routes ['Departure']
+        destination=routes ['Destination']
+        weight=float(routes['distance_km'])
+        addConnection(analyzer, prevrout, route, 0)
+        addConnection(analyzer, route, prevrout, 0)
+        
+
+def addConnection(analyzer, origin, destination,weight):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edgedirected = gr.getEdge(analyzer['airports_directed'], origin, destination)
+    edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
+    if edgedirected is None:
+        gr.addEdge(analyzer[''], origin, destination,weight)
+        gr.addEdge(analyzer[''], origin, destination,weight)
+    if edgenodirected is not None:
+        gr addEdgenodirec (analyzer['connections'], origin, destination,weight)
+    return analyzer
+
+
 # Funciones para creacion de datos
 
 # Funciones de consulta

@@ -37,22 +37,30 @@ def init():
 
 
 # Funciones para la carga de datos
+def loadData (analyzer, airportsfile,r, w):
+    loadDataAirp()
+
+    return analyzer
 
 def loadDataAirp (analyzer, airportsfile):
     airportsfile=cf.data_dir+airportsfile
     input_file =csv.DictReader(open(airportsfile, encoding="utf-8"),
                                 delimiter=",")
-    lastairport = None
     for airport in input_file:
-        if lastairport is not None:
-            sameairport = lastairport['IATA'] == airport['IATA']
-            #de aquí
-            if sameairport and samedirection and not samebusStop:
-                #hasta aquí
-                model.addStopConnection(analyzer, lastservice, airport)
-        lastservice = service
-    model.addRouteConnections(analyzer)
+        model.addStopConnection(analyzer, lastservice, airport)
     return analyzer
+
+def loadDataRoutes (analyzer, airportsfile):
+    airportsfile=cf.data_dir+airportsfile
+    input_file =csv.DictReader(open(airportsfile, encoding="utf-8"),
+                                delimiter=",")
+    for airport in input_file:
+        model.addedgeConnection(analyzer, lastservice, airport)
+    return analyzer
+
+def loadDataCities (analyzer, airportsfile):
+
+def loadDataAirp (analyzer, airportsfile):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
