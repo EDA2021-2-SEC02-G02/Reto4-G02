@@ -34,6 +34,7 @@ from DISClib.ADT.graph import addEdge, gr
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+from DISClib.ADT import orderedmap as om
 assert cf
 
 """
@@ -73,7 +74,8 @@ def newAnalizer():
                                  maptype="PROBING",
                                  loadfactor=0.89,
                                  comparefunction=comparecitiesmap)
-
+        analyzer['citiestreelong']=om.newMap(onatype="RBT",
+                                        comparefunction=compareLongitudes)   
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -99,6 +101,16 @@ def comparecitiesmap (keycity,city):
     if (keycity==cityentry):
         return 0
     elif (keycity>cityentry):
+        return 1
+    else:
+        return -1
+
+def compareLongitudes(Long1, Long2):
+    Long1=float(Long1)
+    Long2=float(Long2)
+    if (Long1==Long2):
+        return 0
+    elif (Long1 > Long2):
         return 1
     else:
         return -1
@@ -168,6 +180,7 @@ def addcity (analyzer, city):
         "id":city["id"]
          }
     lt.addLast(analyzer["cities"],city)
+    updateLongitude(analyzer['citiestreelong'],city)
 
 def addcitymap(tablename, city, citylist):
     try:
@@ -176,6 +189,44 @@ def addcitymap(tablename, city, citylist):
     except Exception as e:
         raise e
 
+def updateLongitude(tree, city):
+    occurredlongitude=(round(float(city["longitude"]),2))
+    entry=om.get(tree,occurredlongitude)
+    if entry is None:
+        longitudeentry=newLatitudetree(city)
+        om.put(tree,occurredlongitude,longitudeentry)
+    else:
+        longitudeentry=me.getValue(entry)
+    addLatitudevalue(longitudeentry,city)
+    return tree
+
+def newLatitudetree(city):
+    latitudes={}
+    latitudes["latitudeindex"]=om.newMap (omaptype="RBT",
+                                  comparefunction=compareLatitudes)
+    return latitudes
+    
+def addLatitudevalue(tree, city):
+    tree=tree["latitudeindex"]
+    occurredlatitude=(round(float(city["latitude"]),2))
+    entry=om.get(tree,occurredlatitude)
+    if entry is None:
+        latitudeentry=lt.newList("ARRAY_LISY")
+        om.put(tree,occurredlatitude,latitudeentry)
+    else:
+        latitudeentry=me.getValue(entry)
+    lt.addLast(latitudeentry,city)
+
+
+def compareLatitudes (Lati1, Lati2):
+    Lati1=float(Lati1)
+    Lati2=float(Lati2)
+    if (Lati1==Lati2):
+        return 0
+    elif (Lati1 > Lati2):
+        return 1
+    else:
+        return -1
 # Funciones para creacion de datos
 
 # Funciones de consulta
