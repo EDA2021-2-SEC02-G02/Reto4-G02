@@ -24,7 +24,16 @@ import config as cf
 import model
 import csv
 import time as time
-
+import config as cf
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.ADT.graph import addEdge, gr
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Utils import error as error
+assert cf
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -37,30 +46,59 @@ def init():
 
 
 # Funciones para la carga de datos
-def loadData (analyzer, airportsfile,r, w):
-    loadDataAirp()
-
-    return analyzer
+def loadData (analyzer, airportsfile,routesfile, citiesfile):
+    loadDataAirp(analyzer,airportsfile)
+    loadDataRoutes(analyzer, routesfile)
+    loadDataCities(analyzer,citiesfile )
+    load_tablecity(analyzer)
+    
 
 def loadDataAirp (analyzer, airportsfile):
     airportsfile=cf.data_dir+airportsfile
     input_file =csv.DictReader(open(airportsfile, encoding="utf-8"),
                                 delimiter=",")
     for airport in input_file:
-        model.addStopConnection(analyzer, lastservice, airport)
-    return analyzer
+        model.addAirportconnection(analyzer, airport)
+    
 
-def loadDataRoutes (analyzer, airportsfile):
-    airportsfile=cf.data_dir+airportsfile
-    input_file =csv.DictReader(open(airportsfile, encoding="utf-8"),
+def loadDataRoutes (analyzer, routesfile):
+    routesfile=cf.data_dir+routesfile
+    input_file =csv.DictReader(open(routesfile, encoding="utf-8"),
                                 delimiter=",")
-    for airport in input_file:
-        model.addedgeConnection(analyzer, lastservice, airport)
+    for route in input_file:
+        model.addRouteConnections(analyzer, route)
     return analyzer
 
-def loadDataCities (analyzer, airportsfile):
+def loadDataCities (analyzer, citiesfile):
+    citiesfile=cf.data_dir+citiesfile
+    input_file =csv.DictReader(open(citiesfile, encoding="utf-8"),
+                                delimiter=",")
+    for city in input_file:
+        model.addcity(analyzer, city)
+    return analyzer
 
-def loadDataAirp (analyzer, airportsfile):
+def load_tablecity (analyzer):
+    for city in lt.iterator (analyzer['cities']):
+        cityname=city["city"]
+        tablename=analyzer["citiesMap"]
+        model.addcitymap(tablename,cityname,city)
+
+#Funciones para cansultar el número de vértices
+def totalairnodir(analyzer):
+    return model.totalairnodir(analyzer)
+
+def totalroutesnodir(analyzer):
+    return model.totalroutesnodir(analyzer)
+
+def totalairdir(analyzer):
+    return model.totalairdir(analyzer)
+
+def totalroutesdir(analyzer):
+    return model.totalroutesdir(analyzer)
+
+def totalcities(analyzer):
+    return model.totalcities(analyzer)
+
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

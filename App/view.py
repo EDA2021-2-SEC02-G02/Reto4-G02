@@ -51,23 +51,21 @@ def printMenu():
 catalog = None
 def optionCero(cont):
     print("\nCargando información ....")
-    controller.loadDataAirp(cont,airportsfile)
-    numairports=controller.totalairports(cont)
-    numroutes=controller.totalroutes(cont)
+    cont=controller.init()
+    controller.loadData(cont,airportsfile, routesfile, citiesfile)
+    numairgraph1=controller.totalairnodir(cont)
+    numroutesgraph1=controller.totalroutesnodir(cont)
+    numairgraph2=controller.totalairdir(cont)
+    numroutesgraph2=controller.totalroutesdir(cont)
+    numcities=controller.totalcities(cont)
 
 
-def optionOne(cont):
 
-def optionTwo(cont):
 
-def optionThree(cont):
-
-def optionFour(cont):
-
-def optionFive(cont):
 """
 Menu principal
 """
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')

@@ -30,7 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.ADT.graph import gr
+from DISClib.ADT.graph import addEdge, gr
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
@@ -47,8 +47,11 @@ def newAnalizer():
         analyzer={
                     'airports_no_directed':None,
                     'airports_directed':None,
-                    'cities_from_airport':None
+                    'cities_from_airport':None,
+                    'cities':None,
+                    'citiesMap':None
                     }
+        
         analyzer['airports_no_directed']=gr.newGraph(datastructure='ADJ_LIST',
                                                     directed=False,
                                                     size=8996,
@@ -59,10 +62,18 @@ def newAnalizer():
                                                     size=8996,
                                                     comparefunction=compareAirports)
 
-        analyzer['cities_from_airport']=gr.newGraph(datastructure='ADJ_LIST',
-                                                    directed=True,
-                                                    size=46494,
-                                                    comparefunction=compareCities)                                          
+        #analyzer['cities_from_airport']=gr.newGraph(datastructure='ADJ_LIST',
+         #                                           directed=True,
+         #                                           size=46494,
+         #                                           comparefunction=compareCities)
+
+        analyzer['cities']=lt.newList('ARRAY_LIST', cmpfunction=compareCities)
+
+        analyzer['citiesMap']=mp.newMap(37498,
+                                 maptype="PROBING",
+                                 loadfactor=0.89,
+                                 comparefunction=comparecitiesmap)
+
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -82,20 +93,43 @@ def compareCities(id,city):
         return 1
     else:
         return -1
+    
+def comparecitiesmap (keycity,city):
+    cityentry=me.getKey(city)
+    if (keycity==cityentry):
+        return 0
+    elif (keycity>cityentry):
+        return 1
+    else:
+        return -1
 
 # Funciones para agregar informacion al catalogo
 
-def addAirportconnection(analyzer, lastairport, airport):
+def addAirportconnection(analyzer, airport):
     try:
         origin=airport['IATA']
-        addStop(analyzer, origin)
+        addAirport(analyzer, origin)
         
         #addRouteStop(analyzer, service)
         return analyzer
     except Exception as exp:
-        error.reraise(exp, 'model:addStopConnection')
+        error.reraise(exp, 'model:addAirportConnection')
 
-def addRouteConnections(analyzer, routes):
+def addAirport(analyzer, origin):
+    """
+    Adiciona un aeropuerto como un vertice del grafo
+    """
+    try:
+        if not gr.containsVertex(analyzer['airports_directed'], origin):
+            gr.insertVertex(analyzer['airports_directed'], origin)
+        return analyzer
+    except Exception as e:
+        raise e
+        
+    #except Exception as exp:
+     #   error.reraise(exp, 'model:addAirport')
+
+def addRouteConnections(analyzer, route):
     """
     Por cada vertice (cada estacion) se recorre la lista
     de rutas servidas en dicha estación y se crean
@@ -104,12 +138,13 @@ def addRouteConnections(analyzer, routes):
     """
     #lststops = m.keySet(analyzer['stops'])
     try:
-        origin=routes ['Departure']
-        destination=routes ['Destination']
-        weight=float(routes['distance_km'])
-        addConnection(analyzer, prevrout, route, 0)
-        addConnection(analyzer, route, prevrout, 0)
-        
+        origin=route ['Departure']
+        destination=route ['Destination']
+        weight=float(route['distance_km'])
+        addConnection(analyzer, origin, destination, weight)
+        addConnection(analyzer, destination, origin, weight)
+    except Exception as exp:
+        error.reraise(exp, 'model:addRouteConnection')
 
 def addConnection(analyzer, origin, destination,weight):
     """
@@ -118,16 +153,47 @@ def addConnection(analyzer, origin, destination,weight):
     edgedirected = gr.getEdge(analyzer['airports_directed'], origin, destination)
     edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
     if edgedirected is None:
-        gr.addEdge(analyzer[''], origin, destination,weight)
-        gr.addEdge(analyzer[''], origin, destination,weight)
+        gr.addEdge(analyzer['airports_directed'], origin, destination,weight)
+        gr.addEdge(analyzer['airports_directed'], origin, destination,weight)
     if edgenodirected is not None:
-        gr addEdgenodirec (analyzer['connections'], origin, destination,weight)
+        gr.addEdge(analyzer['airports_no_directed'], origin, destination,weight)
     return analyzer
 
+def addcity (analyzer, city):
+    city={
+        "city":city["city"],
+        "latitude":city["lat"],
+        "longitude":city["lng"],
+        "country":city["country"],
+        "id":city["id"]
+         }
+    lt.addLast(analyzer["cities"],city)
+
+def addcitymap(tablename, city, citylist):
+    try:
+        if city!= "" and mp.contains (tablename,city)==False:
+            mp.put(tablename,city,citylist)
+    except Exception as e:
+        raise e
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
+def totalairnodir(analyzer):
+    return gr.numVertices(analyzer['airports_no_directed'])
+    
+def totalroutesnodir(analyzer):
+    return gr.numEdges(analyzer['airports_no_directed'])
+
+def totalairdir(analyzer):
+    return gr.numVertices(analyzer['airports_directed'])
+    
+def totalroutesdir(analyzer):
+    return gr.numEdges(analyzer['airports_directed'])
+    
+def totalcities(analyzer):
+    return mp.size(analyzer['citiesMap'])
+    
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
