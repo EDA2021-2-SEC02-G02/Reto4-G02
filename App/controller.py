@@ -51,7 +51,7 @@ def loadData (analyzer, airportsfile,routesfile, citiesfile):
     loadDataRoutes(analyzer, routesfile)
     loadDataCities(analyzer,citiesfile )
     load_tablecity(analyzer)
-    createnodirected (analyzer)
+    #createnodirected (analyzer)
     return analyzer
     
 

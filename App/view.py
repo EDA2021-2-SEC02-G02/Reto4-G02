@@ -76,7 +76,6 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 0:
-        print("Cargando información de los archivos ....")
         cont = controller.init()
         optionCero (cont)
     elif int(inputs[0]) == 1:
