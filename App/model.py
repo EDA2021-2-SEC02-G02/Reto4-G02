@@ -199,7 +199,7 @@ def createnodirected (analyzer):
 
 def addairportnodirected(analyzer,vertex):
     try:
-        #print(gr.containsVertex(analyzer['airports_directed'], origin))
+       
         if not gr.containsVertex(analyzer['airports_no_directed'], vertex):
             gr.insertVertex(analyzer['airports_no_directed'], vertex)
         return analyzer
@@ -208,7 +208,7 @@ def addairportnodirected(analyzer,vertex):
 
 def addedgenodirected(analyzer, vertexa,vertexb,weight):
     edgenodirected = gr.getEdge(analyzer['airports_no_directed'], vertexa, vertexb)
-   # edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
+   
     if edgenodirected is None:
         gr.addEdge(analyzer['airports_no_directed'], vertexa, vertexb,weight)
 
