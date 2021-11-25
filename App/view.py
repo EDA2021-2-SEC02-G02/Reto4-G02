@@ -46,7 +46,7 @@ def printMenu():
     print("2- Encontrar clústeres de tráfico aéreo" )
     print("3- Encontrar la ruta más corta entre ciudades")
     print("4- Utilizar las millas de viajero")
-    print("5- CUantificar el efecto de un aeropuerto cerrado")
+    print("5- Cuantificar el efecto de un aeropuerto cerrado")
 
 catalog = None
 def optionCero(cont):
@@ -58,6 +58,12 @@ def optionCero(cont):
     numairgraph2=controller.totalairdir(cont)
     numroutesgraph2=controller.totalroutesdir(cont)
     numcities=controller.totalcities(cont)
+    print(numairgraph1)
+    print(numroutesgraph1)
+    print(numairgraph2)
+    print(numroutesgraph2)
+    print(numcities)
+    
 
 
 

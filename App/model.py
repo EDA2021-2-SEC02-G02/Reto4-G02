@@ -74,16 +74,21 @@ def newAnalizer():
                                  maptype="PROBING",
                                  loadfactor=0.89,
                                  comparefunction=comparecitiesmap)
-        analyzer['citiestreelong']=om.newMap(onatype="RBT",
+
+        analyzer['citiestreelong']=om.newMap(omaptype="RBT",
                                         comparefunction=compareLongitudes)   
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
 
 def compareAirports(code, airport):
-    aircode=airport['IATA']
+    #print (code)
+    #print (airport)
+    aircode=airport['key']
     if (code == aircode):
         return 0
+    elif (code > aircode):
+        return 1
     else:
         return -1
 
@@ -125,18 +130,19 @@ def addAirportconnection(analyzer, airport):
         #addRouteStop(analyzer, service)
         return analyzer
     except Exception as exp:
-        error.reraise(exp, 'model:addAirportConnection')
+        error.reraise(exp, 'model:addAirportconnection')
 
 def addAirport(analyzer, origin):
     """
     Adiciona un aeropuerto como un vertice del grafo
     """
     try:
+        #print(gr.containsVertex(analyzer['airports_directed'], origin))
         if not gr.containsVertex(analyzer['airports_directed'], origin):
             gr.insertVertex(analyzer['airports_directed'], origin)
         return analyzer
-    except Exception as e:
-        raise e
+    except Exception as exp:
+        error.reraise(exp, 'model:addAirport')
         
     #except Exception as exp:
      #   error.reraise(exp, 'model:addAirport')
@@ -150,11 +156,10 @@ def addRouteConnections(analyzer, route):
     """
     #lststops = m.keySet(analyzer['stops'])
     try:
-        origin=route ['Departure']
-        destination=route ['Destination']
+        origin=route['Departure']
+        destination=route['Destination']
         weight=float(route['distance_km'])
         addConnection(analyzer, origin, destination, weight)
-        addConnection(analyzer, destination, origin, weight)
     except Exception as exp:
         error.reraise(exp, 'model:addRouteConnection')
 
@@ -163,13 +168,50 @@ def addConnection(analyzer, origin, destination,weight):
     Adiciona un arco entre dos estaciones
     """
     edgedirected = gr.getEdge(analyzer['airports_directed'], origin, destination)
-    edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
+   # edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
     if edgedirected is None:
         gr.addEdge(analyzer['airports_directed'], origin, destination,weight)
-        gr.addEdge(analyzer['airports_directed'], origin, destination,weight)
-    if edgenodirected is not None:
-        gr.addEdge(analyzer['airports_no_directed'], origin, destination,weight)
+   #     gr.addEdge(analyzer['airports_directed'], origin, destination,weight)
+   # if edgenodirected is not None:
+   #     gr.addEdge(analyzer['airports_no_directed'], origin, destination,weight)
     return analyzer
+
+def createnodirected (analyzer):
+    vertices=gr.vertices(analyzer['airports_directed'])
+    for vertex in lt.iterator(vertices):
+        addairportnodirected(analyzer,vertex)
+
+    i=1
+    while i<= lt.size(vertices):
+        j=2
+        vertexa=lt.getElement(vertices,i)
+        while j<= lt.size(vertices):
+            vertexb=lt.getElement(vertices,j)
+            edge1=gr.getEdge(analyzer['airports_directed'], vertexa,vertexb)
+            if edge1!= None:
+                weight=edge1['weight']
+                edge2=gr.getEdge(analyzer['airports_directed'], vertexb,vertexa)
+                if edge2!= None:
+                    addedgenodirected(analyzer, vertexa,vertexb,weight)
+            j+=1
+        i+=1
+        
+
+def addairportnodirected(analyzer,vertex):
+    try:
+        #print(gr.containsVertex(analyzer['airports_directed'], origin))
+        if not gr.containsVertex(analyzer['airports_no_directed'], vertex):
+            gr.insertVertex(analyzer['airports_no_directed'], vertex)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addAirport')
+
+def addedgenodirected(analyzer, vertexa,vertexb,weight):
+    edgenodirected = gr.getEdge(analyzer['airports_no_directed'], vertexa, vertexb)
+   # edgenodirected=gr.getEdge(analyzer['airports_directed'], destination, origin)
+    if edgenodirected is None:
+        gr.addEdge(analyzer['airports_no_directed'], vertexa, vertexb,weight)
+
 
 def addcity (analyzer, city):
     city={
