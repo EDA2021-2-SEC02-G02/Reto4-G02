@@ -264,6 +264,44 @@ def totalcities(analyzer):
     return mp.size(analyzer['citiesMap'])
     
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+# REQ 1
 
-# Funciones de ordenamiento
+
+
+
+# REQ 2
+
+
+
+
+# REQ 3
+def find_nearairport(analyzer, cityorigin, citydestination ):
+    graph_no_directed=analyzer['airports_no_directed']
+
+    route=min_distance(analyzer,airorigin, airdestination)
+
+def min_distance(analyzer,airorigin,airdestination):
+    graph_directed=analyzer['airports_directed']
+    mod_graph=djk.Dijkstra(graph_directed, airorigin)
+    distance_to_airport=djk.distTo(mod_graph, airdestination)
+    inside_routes=djk.pathTo(mod_graph, airdestination)
+    lst_weights=lt.newList("ARRAY_LIST")
+    i=1
+    j=2
+    while j <= lt.size(inside_routes):
+        first=lt.getElement(inside_routes,i)
+        second=lt.getElement(inside_routes,j)
+        edge=gr.getEdge(graph_directed,first,second)
+        lt.addLast(lst_weights,edge['weight'])
+        i+=1 
+        j+=1
+    return (distance_to_airport, lst_weights)
+
+
+
+
+
+
+
+# REQ 4
+# REQ 5

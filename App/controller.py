@@ -51,7 +51,6 @@ def loadData (analyzer, airportsfile,routesfile, citiesfile):
     loadDataRoutes(analyzer, routesfile)
     loadDataCities(analyzer,citiesfile )
     load_tablecity(analyzer)
-    #createnodirected (analyzer)
     return analyzer
     
 
@@ -87,9 +86,7 @@ def load_tablecity (analyzer):
         model.addcitymap(tablename,cityname,city)
     return analyzer
 
-def createnodirected (analyzer):
-    model.createnodirected (analyzer)
-    return analyzer
+
 
 #Funciones para cansultar el número de vértices
 def totalairnodir(analyzer):
