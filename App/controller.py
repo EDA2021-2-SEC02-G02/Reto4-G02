@@ -81,9 +81,10 @@ def loadDataCities (analyzer, citiesfile):
 
 def load_tablecity (analyzer):
     for city in lt.iterator (analyzer['cities']):
-        cityname=city["city"]
+        id=city["id"]
         tablename=analyzer["citiesMap"]
-        model.addcitymap(tablename,cityname,city)
+        model.addcitymap(tablename,id,city)
+        model.agregarLista(analyzer['ciudades'],city["city"],id)
     return analyzer
 
 

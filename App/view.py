@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 import threading
+from DISClib.ADT import map as mp
 
 airportsfile = 'airports_full.csv'
 routesfile= 'routes_full.csv'
@@ -58,6 +59,7 @@ def optionCero(cont):
     numairgraph2=controller.totalairdir(cont)
     numroutesgraph2=controller.totalroutesdir(cont)
     numcities=controller.totalcities(cont)
+    
     print(numairgraph1)
     print(numroutesgraph1)
     print(numairgraph2)
@@ -79,13 +81,48 @@ while True:
         cont = controller.init()
         optionCero (cont)
     elif int(inputs[0]) == 1:
+        
         optionOne(cont)
 
     elif int(inputs[0]) == 2:
         optionTwo(cont)
 
     elif int(inputs[0]) == 3:
-        optionThree(cont)
+        
+        ciudadInicio= input("ingrese el nombre de la ciudad")
+        mapaID= cont["ciudades"]
+        llaveID= mp.get(mapaID, ciudadInicio)["value"]
+
+        if lt.size(llaveID) == 1:
+            id= lt.firstElement(llaveID)
+            city= mp.get(cont["citiesMap"],id)["value"]
+
+        elif lt.size(llaveID)> 1:
+            i=1
+            for id in lt.iterator(llaveID):
+                infoCiudad= mp.get(cont["citiesMap"],id)["value"]
+                print(str(i)+"-"+infoCiudad["city"]+"-"+infoCiudad["country"])
+                i+=1
+            y= int(input("\n escoja la ciudad: "))
+            city= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
+        
+        ciudadFinal= input("ingrese el nombre de la ciudad")
+        mapaID= cont["ciudades"]
+        llaveID= mp.get(mapaID, ciudadFinal)["value"]
+
+        if lt.size(llaveID) == 1:
+            id= lt.firstElement(llaveID)
+            cityF= mp.get(cont["citiesMap"],id)["value"]
+
+        elif lt.size(llaveID)> 1:
+            i=1
+            for id in lt.iterator(llaveID):
+                infoCiudad= mp.get(cont["citiesMap"],id)["value"]
+                print(str(i)+"-"+infoCiudad["city"]+"-"+infoCiudad["country"])
+                i+=1
+            y= int(input("\n escoja la ciudad: "))
+            cityF= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
+     
     
     elif int(inputs[0]) == 4:
         optionFour(cont)

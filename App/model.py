@@ -68,8 +68,12 @@ def newAnalizer():
          #                                           directed=True,
          #                                           size=46494,
          #                                           comparefunction=compareCities)
-
-        analyzer['cities']=lt.newList('ARRAY_LIST', cmpfunction=compareCities)
+        analyzer["cities"]= lt.newList("ARRAY_LIST",compareCities )
+        
+        analyzer['ciudades']=mp.newMap(37498,
+                                 maptype="PROBING",
+                                 loadfactor=0.89,
+                                 comparefunction=compareCities)
 
         analyzer['citiesMap']=mp.newMap(37498,
                                  maptype="PROBING",
@@ -122,6 +126,21 @@ def compareLongitudes(Long1, Long2):
         return -1
 
 # Funciones para agregar informacion al catalogo
+def agregarLista (mapa,city,id):
+    try:
+        if city != "" and mp.contains(mapa, city)==False:
+            listaCiudades=lt.newList("ARRAY_LIST")
+            lt.addLast(listaCiudades,id)
+            mp.put (mapa, city, listaCiudades)
+        
+        elif  mp.contains(mapa, city)==True:
+        
+            temp=mp.get(mapa, city)
+            tempo=me.getValue(temp)
+        
+            lt.addLast (tempo, id)
+    except Exception as e:
+        raise e
 
 def addAirportconnection(analyzer, airport):
     try:
@@ -275,6 +294,10 @@ def totalcities(analyzer):
 
 
 # REQ 3
+
+
+
+
 def find_nearairport(analyzer, cityorigin, citydestination ):
     graph_no_directed=analyzer['airports_no_directed']
 
