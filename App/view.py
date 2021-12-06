@@ -52,7 +52,6 @@ def printMenu():
 catalog = None
 def optionCero(cont):
     print("\nCargando información ....")
-    cont=controller.init()
     controller.loadData(cont,airportsfile, routesfile, citiesfile)
     numairgraph1=controller.totalairnodir(cont)
     numroutesgraph1=controller.totalroutesnodir(cont)
@@ -89,7 +88,7 @@ while True:
 
     elif int(inputs[0]) == 3:
         
-        ciudadInicio= input("ingrese el nombre de la ciudad")
+        ciudadInicio= input("ingrese el nombre de la ciudad: ")
         mapaID= cont["ciudades"]
         llaveID= mp.get(mapaID, ciudadInicio)["value"]
 

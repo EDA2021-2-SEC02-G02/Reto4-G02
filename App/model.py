@@ -73,7 +73,7 @@ def newAnalizer():
         analyzer['ciudades']=mp.newMap(37498,
                                  maptype="PROBING",
                                  loadfactor=0.89,
-                                 comparefunction=compareCities)
+                                 )
 
         analyzer['citiesMap']=mp.newMap(37498,
                                  maptype="PROBING",
@@ -126,8 +126,9 @@ def compareLongitudes(Long1, Long2):
         return -1
 
 # Funciones para agregar informacion al catalogo
-def agregarLista (mapa,city,id):
+def agregarLista (analyzer,city,id):
     try:
+        mapa = analyzer['ciudades']
         if city != "" and mp.contains(mapa, city)==False:
             listaCiudades=lt.newList("ARRAY_LIST")
             lt.addLast(listaCiudades,id)
@@ -139,6 +140,7 @@ def agregarLista (mapa,city,id):
             tempo=me.getValue(temp)
         
             lt.addLast (tempo, id)
+        return analyzer 
     except Exception as e:
         raise e
 

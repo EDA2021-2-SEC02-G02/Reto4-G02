@@ -84,7 +84,7 @@ def load_tablecity (analyzer):
         id=city["id"]
         tablename=analyzer["citiesMap"]
         model.addcitymap(tablename,id,city)
-        model.agregarLista(analyzer['ciudades'],city["city"],id)
+        model.agregarLista(analyzer,city["city"],id)
     return analyzer
 
 
