@@ -131,6 +131,8 @@ def count_custeres(analyzer, iata1, iata2):
 #REQ 4
 
 #REQ 5
+def airclosed (analyzer, iata):
+    return model.airclosed(analyzer, iata)
 
 
 # Funciones de ordenamiento

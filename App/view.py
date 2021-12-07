@@ -113,7 +113,30 @@ def optionTwo(cont):
     if iata1 not in lt.iterator(listnodes) or iata2 not in lt.iterator(listnodes):
         print("Por favor elija vertices vAlidos!!")
     
-        
+def optionFive(cont):
+    listairports=cont['airports']
+    iata=input("Ingrese el código IATA del aeropuerto cerrado: ")0
+    listanswer=controller.airclosed(cont,iata)
+    numafected=lt.size(listanswer)
+    threefirst=lt.subList(listanswer,1,3)
+    threelast=lt.subList(listanswer,((numafected)-2),3)
+    print("El número de aeropuertos afectados es: "+str(numafected))
+    print("La información de los tres primeros aeropuertos de las lista es: ")
+    for first in lt.iterator(threefirst):
+        for air in lt.iterator(listairports):
+            if air["IATA"]==first:
+                print("Name: "+air["Name"])
+                print("City: "+air["City"])
+                print("IATA: "+air["IATA"])
+    print("La información de los tres ultimos aeropuertos de las lista es: ")
+    for last in lt.iterator(threelast):
+        for air in lt.iterator(listairports):
+            if air["IATA"]==last:
+                print("Name: "+air["Name"])
+                print("City: "+air["City"])
+                print("IATA: "+air["IATA"])
+
+
 
 
 """
@@ -171,7 +194,7 @@ while True:
      
     
     elif int(inputs[0]) == 4:
-        optionFour(cont)
+        
 
     elif int(inputs[0]) == 5:
         optionFive(cont)

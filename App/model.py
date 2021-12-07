@@ -361,10 +361,6 @@ def count_custeres(analyzer,iata1, iata2):
 
 
 # REQ 3
-
-
-
-
 def find_nearairport(analyzer, cityorigin, citydestination ):
     graph_no_directed=analyzer['airports_no_directed']
 
@@ -388,11 +384,12 @@ def min_distance(analyzer,airorigin,airdestination):
     return (distance_to_airport, lst_weights)
 
 
-
-
-
-
-
 # REQ 4
+
 # REQ 5
-#def airclosed(anlyzer, iata):
+def airclosed(analyzer, iata):
+    dirgraph=analyzer['airports_directed']
+    nodesgraph=gr.vertices(dirgraph)
+    if iata in lt.iterator (nodesgraph):
+        outair= gr.adjacents(dirgraph, iata)
+    return (outair)
