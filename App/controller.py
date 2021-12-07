@@ -60,6 +60,7 @@ def loadDataAirp (analyzer, airportsfile):
                                 delimiter=",")
     for airport in input_file:
         model.addAirportconnection(analyzer, airport)
+        model.addairportlist(analyzer, airport)
     return analyzer
     
 
@@ -104,6 +105,27 @@ def totalroutesdir(analyzer):
 
 def totalcities(analyzer):
     return model.totalcities(analyzer)
+
+def firstcitie(analyzer):
+    return model.firstcitie(analyzer)
+
+def lastcitie(analyzer):
+    return model.lastcitie(analyzer)
+
+#REQ 1
+def interconection(analyzer):
+    return model.interconection(analyzer)
+
+#REQ 2
+def count_custeres(analyzer, iata1, iata2):
+    return model.count_custeres(analyzer, iata1,iata2)
+
+#REQ 3
+
+#REQ 4
+
+#REQ 5
+
 
 # Funciones de ordenamiento
 

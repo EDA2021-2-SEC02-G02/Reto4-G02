@@ -31,8 +31,9 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as mg
 from DISClib.ADT.graph import addEdge, gr
-from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.ADT import orderedmap as om
@@ -46,14 +47,14 @@ los mismos.
 # Construccion de modelos
 def newAnalizer():
     try:
-        analyzer={
+        analyzer={  'airports':None,
                     'airports_no_directed':None,
                     'airports_directed':None,
                     'cities_from_airport':None,
                     'cities':None,
                     'citiesMap':None
                     }
-        
+        analyzer['airports']=lt.newList("ARRAY_LIST",compareAirports)
         analyzer['airports_no_directed']=gr.newGraph(datastructure='ADJ_LIST',
                                                     directed=False,
                                                     size=8996,
@@ -64,10 +65,7 @@ def newAnalizer():
                                                     size=8996,
                                                     comparefunction=compareAirports)
 
-        #analyzer['cities_from_airport']=gr.newGraph(datastructure='ADJ_LIST',
-         #                                           directed=True,
-         #                                           size=46494,
-         #                                           comparefunction=compareCities)
+     
         analyzer["cities"]= lt.newList("ARRAY_LIST",compareCities )
         
         analyzer['ciudades']=mp.newMap(37498,
@@ -124,6 +122,12 @@ def compareLongitudes(Long1, Long2):
         return 1
     else:
         return -1
+
+def addairportlist (analyzer, airport):
+    airportl={
+           "IATA":airport["IATA"]
+            }
+    lt.addLast(analyzer["airports"], airportl)
 
 # Funciones para agregar informacion al catalogo
 def agregarLista (analyzer,city,id):
@@ -282,15 +286,43 @@ def totalroutesdir(analyzer):
     return gr.numEdges(analyzer['airports_directed'])
     
 def totalcities(analyzer):
-    return mp.size(analyzer['citiesMap'])
+    return lt.size(analyzer['cities'])
+
+def firstcitie(analyzer):
+    list=analyzer["cities"]
+    first=lt.firstElement(list)
+    return first
+
+def lastcitie(analyzer):
+    list=analyzer["cities"]
+    last=lt.lastElement(list)
+    return last
     
 
 # REQ 1
+def interconection(analyzer):
+    airplist=analyzer["airports"]
+    graph=analyzer['airports_directed']
+    more=lt.newList("ARRAY_LIST")
+    for air in lt.iterator(airplist):
+        print (air)
+        outde=gr.outdegree(graph,air["IATA"])
+        inde=gr.indegree(graph, air["IATA"])
+        total=outde+inde
+        lt.addLast(more,(air["IATA"],total))
+    mg.sort(more,cmptotal)
+    return more
 
-
-
+def cmptotal (num1, num2):
+    return num1[1]<num2[1]
 
 # REQ 2
+def count_custeres(analyzer,iata1, iata2):
+    dirgraph=analyzer['airports_directed']
+    sccestructure=scc.KosarajuSCC(dirgraph)
+    numconected=scc.connectedComponents(sccestructure)
+    strong=scc.stronglyConnected(sccestructure,iata1,iata2)
+    return(numconected,strong)
 
 
 
@@ -330,3 +362,4 @@ def min_distance(analyzer,airorigin,airdestination):
 
 # REQ 4
 # REQ 5
+#def airclosed(anlyzer, iata):
