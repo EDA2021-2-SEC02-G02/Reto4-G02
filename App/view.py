@@ -56,40 +56,64 @@ def optionCero(cont):
     controller.loadData(cont,airportsfile, routesfile, citiesfile)
     numairgraph1=controller.totalairnodir(cont)
     numroutesgraph1=controller.totalroutesnodir(cont)
+    firstlastnodir=controller.firstairnodir(cont)
     numairgraph2=controller.totalairdir(cont)
     numroutesgraph2=controller.totalroutesdir(cont)
+    firstlastdir=controller.firstairdir(cont)
     numcities=controller.totalcities(cont)
     firstcitie=controller.firstcitie(cont)
     lastcitie=controller.lastcitie(cont)
     
     print("El numero total de aeropuestos en el grafo no dirigido es de: "+str(numairgraph1))
-    print("El número total de rutas aereas en el grafo no dirigido es de: " +str(numroutesgraph1))
-    print("El número total de aeropuesrtos en el grafo dirigido es de: "+str(numairgraph2))
-    print("El número total de rutas aereas en el grafo dirigido es de: "+str(numroutesgraph2))
-    print("El número toal de ciudades es de: "+str(numcities))
+    print("El numero total de rutas aereas en el grafo no dirigido es de: " +str(numroutesgraph1))
+    print("El primer aeropuerto cargado en este grafo es: ")
+    print(firstlastnodir[0])
+    print("El ultimo aeropuerto cargado en este grafo es: ")
+    print(firstlastnodir[1])
+    print("El numero total de aeropuesrtos en el grafo dirigido es de: "+str(numairgraph2))
+    print("El numero total de rutas aereas en el grafo dirigido es de: "+str(numroutesgraph2))
+    print("El primer aeropuerto cargado en este grafo es: ")
+    print(firstlastdir[0])
+    print("El ultimo aeropuerto cargado en este grafo es: ")
+    print(firstlastdir[1])
+    print("El numero toal de ciudades es de: "+str(numcities))
+    print("La primer ciudad cargada es: ")
     print(firstcitie)
+    print("la ultima ciudad cargada: ")
     print(lastcitie)
 
 def optionOne(cont):
     listmore=controller.interconection(cont)
-    for iata in lt.iterator(listmore):
-        graph=cont['airports_directed']
-        inbound=gr.indegree(graph,iata[0])
-        outbond=gr.outdegree(graph,iata[0])
-        print("Name: ")
-        print("city: ")
-        print("contry: ")
-        print("IATA: "+str(iata[0]))
-        print("connections: "+ str(iata[1]))
-        print("Inbound: "+str(inbound))
-        print("outbond: "+ str(outbond))
+    graph=cont['airports_directed']
+    airport=cont['airports']
+    sublist=lt.subList(listmore,1,5)
+    print (sublist)
+    for iata in lt.iterator(sublist):
+        for air in lt.iterator(airport):
+            if air["IATA"]==iata[0]:
+                inbound=gr.indegree(graph,iata[0])
+                outbond=gr.outdegree(graph,iata[0])
+                print("Name: "+air["Name"])
+                print("city: "+air["City"])
+                print("country: "+air["Country"])
+                print("IATA: "+str(iata[0]))
+                print("connections: "+ str(iata[1]))
+                print("Inbound: "+str(inbound))
+                print("outbond: "+ str(outbond))
 
 def optionTwo(cont):
-    iata1=input ("Ingrese el codigo IATA del aeropuerto 1")
-    iata2=input ("Ingrese el codigo IATA del aeropuerto 2")
-    answer=controller.count_custeres(cont,iata1,iata2)
-    print("El número de componentes conectados es de: "+str(answer[0]))
-    print ("El aeropuerto 1 y el aeropuerto 2 se encuentran en el mismo componente conectado? "+str(answer[1]))
+    graph=cont['airports_directed']
+    listnodes=gr.vertices(graph)
+    iata1=input ("Ingrese el codigo IATA del aeropuerto 1: ")
+    iata2=input ("Ingrese el codigo IATA del aeropuerto 2: ")
+    if iata1 in lt.iterator(listnodes) and iata2 in lt.iterator(listnodes):
+        answer=controller.count_custeres(cont,iata1,iata2)
+        print("El número de componentes conectados es de: "+str(answer[0]))
+        print ("El aeropuerto 1 y el aeropuerto 2 se encuentran en el mismo componente conectado? :"+str(answer[1])) 
+    if iata1 not in lt.iterator(listnodes) or iata2 not in lt.iterator(listnodes):
+        print("Por favor elija vertices vAlidos!!")
+    
+        
 
 
 """

@@ -125,7 +125,13 @@ def compareLongitudes(Long1, Long2):
 
 def addairportlist (analyzer, airport):
     airportl={
-           "IATA":airport["IATA"]
+           "IATA":airport["IATA"],
+           "Name":airport["Name"],
+           "City":airport["City"],
+           "Country":airport["Country"],
+           "id":airport["id"],
+           "Latitude":airport["Latitude"],
+           "Longitude":airport["Longitude"]
             }
     lt.addLast(analyzer["airports"], airportl)
 
@@ -279,11 +285,38 @@ def totalairnodir(analyzer):
 def totalroutesnodir(analyzer):
     return gr.numEdges(analyzer['airports_no_directed'])
 
+def firstairnodir(analyzer):
+    graph=analyzer['airports_no_directed']
+    listnor=analyzer['airports']
+    listgraph=gr.vertices(graph)
+    first=lt.firstElement(listgraph)
+    last=lt.lastElement(listgraph)
+    for air in lt.iterator(listnor):
+        if air["IATA"]==first:
+            airfirst=air
+        elif air["IATA"]==last:
+            airlast=air
+    return (airfirst,airlast)
+
+
 def totalairdir(analyzer):
     return gr.numVertices(analyzer['airports_directed'])
     
 def totalroutesdir(analyzer):
     return gr.numEdges(analyzer['airports_directed'])
+
+def firstairdir(analyzer):
+    graph=analyzer['airports_directed']
+    listnor=analyzer['airports']
+    listgraph=gr.vertices(graph)
+    first=lt.firstElement(listgraph)
+    last=lt.lastElement(listgraph)
+    for air in lt.iterator(listnor):
+        if air["IATA"]==first:
+            airfirst=air
+        elif air["IATA"]==last:
+            airlast=air
+    return (airfirst,airlast)
     
 def totalcities(analyzer):
     return lt.size(analyzer['cities'])
@@ -303,18 +336,20 @@ def lastcitie(analyzer):
 def interconection(analyzer):
     airplist=analyzer["airports"]
     graph=analyzer['airports_directed']
+    listnodes=gr.vertices(graph)
     more=lt.newList("ARRAY_LIST")
     for air in lt.iterator(airplist):
-        print (air)
-        outde=gr.outdegree(graph,air["IATA"])
-        inde=gr.indegree(graph, air["IATA"])
-        total=outde+inde
-        lt.addLast(more,(air["IATA"],total))
+        for node in lt.iterator(listnodes):
+            if air["IATA"] == node:
+                outde=gr.outdegree(graph,node)
+                inde=gr.indegree(graph, node)
+                total=outde+inde
+                lt.addLast(more,(node,total))
     mg.sort(more,cmptotal)
     return more
 
 def cmptotal (num1, num2):
-    return num1[1]<num2[1]
+    return num1[1]>num2[1]
 
 # REQ 2
 def count_custeres(analyzer,iata1, iata2):
@@ -323,8 +358,6 @@ def count_custeres(analyzer,iata1, iata2):
     numconected=scc.connectedComponents(sccestructure)
     strong=scc.stronglyConnected(sccestructure,iata1,iata2)
     return(numconected,strong)
-
-
 
 
 # REQ 3

@@ -97,11 +97,17 @@ def totalairnodir(analyzer):
 def totalroutesnodir(analyzer):
     return model.totalroutesnodir(analyzer)
 
+def firstairnodir(analyzer):
+    return model.firstairnodir(analyzer)
+
 def totalairdir(analyzer):
     return model.totalairdir(analyzer)
 
 def totalroutesdir(analyzer):
     return model.totalroutesdir(analyzer)
+
+def firstairdir(analyzer):
+    return model.firstairdir(analyzer)
 
 def totalcities(analyzer):
     return model.totalcities(analyzer)
