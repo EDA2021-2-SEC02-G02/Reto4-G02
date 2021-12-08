@@ -37,6 +37,7 @@ from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.ADT import orderedmap as om
+from math import radians, cos, sin, asin, sqrt
 assert cf
 
 """
@@ -85,8 +86,6 @@ def newAnalizer():
         error.reraise(exp, 'model:newAnalyzer')
 
 def compareAirports(code, airport):
-    #print (code)
-    #print (airport)
     aircode=airport['key']
     if (code == aircode):
         return 0
@@ -362,9 +361,47 @@ def count_custeres(analyzer,iata1, iata2):
 
 # REQ 3
 def find_nearairport(analyzer, cityorigin, citydestination ):
-    graph_no_directed=analyzer['airports_no_directed']
+    citieslist=analyzer['cities']
+    airlist=analyzer['airports']
+    vcity1=None
+    for city in lt.iterator(citieslist):
+        if city["city"]==cityorigin:
+                vcity1=city
+    lon1or=vcity1['longitude']
+    lat1or=vcity1['latitude']
+    orderdistance1=lt.newList("ARRAY_LIST")
+    for airport in lt.iterator(airlist):
+        lon2or=airport["Longitude"]
+        lat2or=airport["Latitud"]
+        distance=haversine(lon1or,lat1or,lon2or,lat2or)
+        lt.addLast(orderdistance1,(airport,distance))
+    mg.sort(orderdistance1,cmptotal)
+    airorigin=lt.lastElement(orderdistance1)
+    
+    vcity2=None
+    for city in lt.iterator(citieslist):
+        if city["city"]==citydestination:
+                vcity2=city
+    lon1des=vcity2['longitude']
+    lat1des=vcity2['latitude']
+    orderdistance2=lt.newList("ARRAY_LIST")
+    for airport in lt.iterator(airlist):
+        lon2des=airport["Longitude"]
+        lat2des=airport["Latitud"]
+        distance=haversine(lon1des,lat1des,lon2des,lat2des)
+        lt.addLast(orderdistance2,(airport,distance))
+    mg.sort(orderdistance2,cmptotal)
+    airdestination=lt.lastElement(orderdistance2)
+    return (airorigin,airdestination)
 
-    route=min_distance(analyzer,airorigin, airdestination)
+def haversine  (lon1, lat1, lon2, lat2):
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2]) 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 6372.8 
+    return c * r
 
 def min_distance(analyzer,airorigin,airdestination):
     graph_directed=analyzer['airports_directed']

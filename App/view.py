@@ -174,7 +174,7 @@ while True:
             y= int(input("\n escoja la ciudad: "))
             city= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
         
-        ciudadFinal= input("ingrese el nombre de la ciudad")
+        ciudadFinal= input("ingrese el nombre de la ciudad: ")
         mapaID= cont["ciudades"]
         llaveID= mp.get(mapaID, ciudadFinal)["value"]
 
@@ -185,13 +185,26 @@ while True:
         elif lt.size(llaveID)> 1:
             i=1
             for id in lt.iterator(llaveID):
-                infoCiudad= mp.get(cont["citiesMap"],id)["value"]
+                inf0
+                oCiudad= mp.get(cont["citiesMap"],id)["value"]
                 print(str(i)+"-"+infoCiudad["city"]+"-"+infoCiudad["country"])
                 i+=1
             y= int(input("\n escoja la ciudad: "))
             cityF= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
      
-    
+        answer1=controller.find_nearairport(cont, city, cityF)
+        airorigin=(answer1[0])[0]
+        distanorigin=(answer1[0])[1]
+        airdestination=(answer1[1])[0]
+        distandestination=(answer1[1])[1]
+        answer2=controller.min_distance(cont, airorigin, airdestination)
+        total_distance=(answer2[0])+distanorigin+distandestination
+        route=answer2[1]
+        print("El aeropuerto de origen es: "+airorigin)
+        print("El aeropuerto de destino es: "+airdestination)
+        print("La distancia en de cada segmento de la ruta en kilometros es: "+str(route))
+        print("La distancia total (terrestre y aerea es: "+str(total_distance))
+
     elif int(inputs[0]) == 4:
         pass
 

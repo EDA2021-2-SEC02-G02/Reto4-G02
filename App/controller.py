@@ -127,7 +127,12 @@ def count_custeres(analyzer, iata1, iata2):
     return model.count_custeres(analyzer, iata1,iata2)
 
 #REQ 3
+def find_nearairport(analyzer, cityorigin, citydestination ):
+    return model.find_nearairport(analyzer, cityorigin, citydestination )
 
+def min_distance(analyzer,airorigin,airdestination):
+    return model.min_distance(analyzer,airorigin,airdestination)
+    
 #REQ 4
 
 #REQ 5
