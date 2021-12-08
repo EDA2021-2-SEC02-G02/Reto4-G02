@@ -29,8 +29,8 @@ import threading
 from DISClib.ADT import map as mp
 from DISClib.ADT.graph import addEdge, gr
 
-airportsfile = 'airports-utf8-small.csv'
-routesfile= 'routes-utf8-small.csv'
+airportsfile = 'airports_full.csv'
+routesfile= 'routes_full.csv'
 citiesfile='worldcities.csv'
 
 initialStation = None
@@ -157,53 +157,86 @@ while True:
 
     elif int(inputs[0]) == 3:
         
-        ciudadInicio= input("ingrese el nombre de la ciudad: ")
-        mapaID= cont["ciudades"]
-        llaveID= mp.get(mapaID, ciudadInicio)["value"]
+        ciudadInicio = input("Ingrese el nombre de la ciudad: ")
+        mapaID = cont["ciudades"]
+        llaveID = mp.get(mapaID, ciudadInicio)
+
+        if llaveID is None:
+            print("Esa ciudad no existe\n")
+            continue
+        else:
+            llaveID = llaveID["value"]
 
         if lt.size(llaveID) == 1:
-            id= lt.firstElement(llaveID)
-            city= mp.get(cont["citiesMap"],id)["value"]
-
-        elif lt.size(llaveID)> 1:
-            i=1
+            id = lt.firstElement(llaveID)
+            city = mp.get(cont["citiesMap"], id)["value"]
+        elif lt.size(llaveID) > 1:
+            i = 1
             for id in lt.iterator(llaveID):
-                infoCiudad= mp.get(cont["citiesMap"],id)["value"]
-                print(str(i)+"-"+infoCiudad["city"]+"-"+infoCiudad["country"])
-                i+=1
-            y= int(input("\n escoja la ciudad: "))
-            city= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
-        
-        ciudadFinal= input("ingrese el nombre de la ciudad: ")
-        mapaID= cont["ciudades"]
-        llaveID= mp.get(mapaID, ciudadFinal)["value"]
+                infoCiudad = mp.get(cont["citiesMap"], id)["value"]
+                print(str(i) + "-" + infoCiudad["city"] + "-" + infoCiudad["country"])
+                i += 1
+            y = int(input("\n Escoja la ciudad: "))
+            city = mp.get(cont["citiesMap"], lt.getElement(llaveID, y))["value"]
+
+        ciudadFinal = input("Ingrese el nombre de la ciudad: ")
+        mapaID = cont["ciudades"]
+        llaveID = mp.get(mapaID, ciudadFinal)
+
+        if llaveID is None:
+            print("Esa ciudad no existe\n")
+            continue
+        else:
+            llaveID = llaveID["value"]
 
         if lt.size(llaveID) == 1:
-            id= lt.firstElement(llaveID)
-            cityF= mp.get(cont["citiesMap"],id)["value"]
-
-        elif lt.size(llaveID)> 1:
-            i=1
+            id = lt.firstElement(llaveID)
+            cityF = mp.get(cont["citiesMap"], id)["value"]
+        elif lt.size(llaveID) > 1:
+            i = 1
             for id in lt.iterator(llaveID):
-                inf0
-                oCiudad= mp.get(cont["citiesMap"],id)["value"]
-                print(str(i)+"-"+infoCiudad["city"]+"-"+infoCiudad["country"])
-                i+=1
-            y= int(input("\n escoja la ciudad: "))
-            cityF= mp.get(cont["citiesMap"],lt.getElement(llaveID,y))["value"]
-     
-        answer1=controller.find_nearairport(cont, city, cityF)
-        airorigin=(answer1[0])[0]
-        distanorigin=(answer1[0])[1]
-        airdestination=(answer1[1])[0]
-        distandestination=(answer1[1])[1]
-        answer2=controller.min_distance(cont, airorigin, airdestination)
-        total_distance=(answer2[0])+distanorigin+distandestination
-        route=answer2[1]
-        print("El aeropuerto de origen es: "+airorigin)
-        print("El aeropuerto de destino es: "+airdestination)
-        print("La distancia en de cada segmento de la ruta en kilometros es: "+str(route))
-        print("La distancia total (terrestre y aerea es: "+str(total_distance))
+                infoCiudad = mp.get(cont["citiesMap"], id)["value"]
+                print(str(i) + "-" + infoCiudad["city"] + "-" + infoCiudad["country"])
+                i += 1
+            y = int(input("\n Escoja la ciudad: "))
+            cityF = mp.get(cont["citiesMap"], lt.getElement(llaveID, y))["value"]
+
+        (
+            airorigin,
+            airdestination,
+            distance_to_airport,
+            inside_routes,
+        ) = controller.shortest_route(cont, city, cityF)
+
+        print(
+            f"\nAeropuerto de origen ({city['city']}, {city['country']}): {airorigin['IATA']}"
+        )
+        print(
+            f"Aeropuerto de destino ({cityF['city']}, {cityF['country']}): {airdestination['IATA']}\n"
+        )
+        print("Ruta:")
+        print(
+            f"\t{city['city']} -> {airorigin['IATA']}: {airorigin['distance_to_origin'] * 1.60934} km"
+        )
+
+        ir = inside_routes["first"]
+        while ir is not None:
+            print(
+                f"\t{ir['info']['vertexA']} -> {ir['info']['vertexB']}: {ir['info']['weight'] * 1.60934} km"
+            )
+            ir = ir["next"]
+
+        print(
+            f"\t{cityF['city']} -> {airdestination['IATA']}: {airdestination['distance_to_destination'] * 1.60934} km"
+        )
+
+        distancia_total = (
+            distance_to_airport * 1.60934
+            + airorigin["distance_to_origin"] * 1.60934
+            + airdestination["distance_to_destination"] * 1.60934
+        )
+
+        print(f"\nDistancia total de la ruta: {distancia_total} km\n")
 
     elif int(inputs[0]) == 4:
         pass

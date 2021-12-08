@@ -126,9 +126,9 @@ def interconection(analyzer):
 def count_custeres(analyzer, iata1, iata2):
     return model.count_custeres(analyzer, iata1,iata2)
 
-#REQ 3
-def find_nearairport(analyzer, cityorigin, citydestination ):
-    return model.find_nearairport(analyzer, cityorigin, citydestination )
+# REQ 3
+def shortest_route(analyzer, cityOrigin, cityDestination):
+    return model.shortest_route(analyzer, cityOrigin, cityDestination)
 
 def min_distance(analyzer,airorigin,airdestination):
     return model.min_distance(analyzer,airorigin,airdestination)

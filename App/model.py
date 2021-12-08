@@ -44,6 +44,29 @@ assert cf
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
+# https://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance in kilometers between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians
+    lon1=float(lon1)
+    lat1=float(lat1)
+    lon2=float(lon2)
+    lat2=float(lat2)
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    r = 3956  # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
+    return c * r
+
+
+assert cf
 
 # Construccion de modelos
 def newAnalizer():
@@ -128,9 +151,9 @@ def addairportlist (analyzer, airport):
            "Name":airport["Name"],
            "City":airport["City"],
            "Country":airport["Country"],
-           "id":airport["id"],
-           "Latitude":airport["Latitude"],
-           "Longitude":airport["Longitude"]
+           #"id":airport["id"],
+           "Latitude": float(airport["Latitude"]),
+           "Longitude": float(airport["Longitude"])
             }
     lt.addLast(analyzer["airports"], airportl)
 
@@ -360,65 +383,70 @@ def count_custeres(analyzer,iata1, iata2):
 
 
 # REQ 3
-def find_nearairport(analyzer, cityorigin, citydestination ):
-    citieslist=analyzer['cities']
-    airlist=analyzer['airports']
-    vcity1=None
-    for city in lt.iterator(citieslist):
-        if city["city"]==cityorigin:
-                vcity1=city
-    lon1or=vcity1['longitude']
-    lat1or=vcity1['latitude']
-    orderdistance1=lt.newList("ARRAY_LIST")
-    for airport in lt.iterator(airlist):
-        lon2or=airport["Longitude"]
-        lat2or=airport["Latitud"]
-        distance=haversine(lon1or,lat1or,lon2or,lat2or)
-        lt.addLast(orderdistance1,(airport,distance))
-    mg.sort(orderdistance1,cmptotal)
-    airorigin=lt.lastElement(orderdistance1)
+def find_nearairport(analyzer, cityOrigin, cityDestination):
+    airports = analyzer["airports"]["elements"]
+    airports_relative_to = [
+        {
+            "IATA": airport["IATA"],
+            "distance_to_origin": haversine(
+                airport["Longitude"],
+                airport["Latitude"],
+                cityOrigin["longitude"],
+                cityOrigin["latitude"],
+            ),
+            "distance_to_destination": haversine(
+                airport["Longitude"],
+                airport["Latitude"],
+                cityDestination["longitude"],
+                cityDestination["latitude"],
+            ),
+        }
+        for airport in airports
+    ]
+    airport_origin = sorted(
+        airports_relative_to, key=lambda x: x["distance_to_origin"]
+    )[0]
+    airport_dest = sorted(
+        airports_relative_to, key=lambda x: x["distance_to_destination"]
+    )[0]
+
+    return airport_origin, airport_dest
+
+
+def shortest_route(analyzer, cityOrigin, cityDestination):
+    airorigin, airdestination = find_nearairport(analyzer, cityOrigin, cityDestination)
+    distance_to_airport, inside_routes = min_distance(
+        analyzer, airorigin["IATA"], airdestination["IATA"]
+    )
+    return airorigin, airdestination, distance_to_airport, inside_routes
+
+
+def min_distance(analyzer, airorigin, airdestination):
+    graph_directed = analyzer["airports_directed"]
+    mod_graph = djk.Dijkstra(graph_directed, airorigin)
+    distance_to_airport = djk.distTo(mod_graph, airdestination)
+    inside_routes = djk.pathTo(mod_graph, airdestination)
+
+    """
+    lst_weights = lt.newList("ARRAY_LIST")
     
-    vcity2=None
-    for city in lt.iterator(citieslist):
-        if city["city"]==citydestination:
-                vcity2=city
-    lon1des=vcity2['longitude']
-    lat1des=vcity2['latitude']
-    orderdistance2=lt.newList("ARRAY_LIST")
-    for airport in lt.iterator(airlist):
-        lon2des=airport["Longitude"]
-        lat2des=airport["Latitud"]
-        distance=haversine(lon1des,lat1des,lon2des,lat2des)
-        lt.addLast(orderdistance2,(airport,distance))
-    mg.sort(orderdistance2,cmptotal)
-    airdestination=lt.lastElement(orderdistance2)
-    return (airorigin,airdestination)
+    print(inside_routes)
+    
+    if lt.size(inside_routes) == 1:
+        return distance_to_airport, inside_routes
+    else:
+        i = 1
+        j = 2
+        while j <= lt.size(inside_routes):
+            first = lt.getElement(inside_routes, i)
+            second = lt.getElement(inside_routes, j)
+            edge = gr.getEdge(graph_directed, first, second)
+            lt.addLast(lst_weights, edge["weight"])
+            i += 1
+            j += 1
+    """
 
-def haversine  (lon1, lat1, lon2, lat2):
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2]) 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
-    r = 6372.8 
-    return c * r
-
-def min_distance(analyzer,airorigin,airdestination):
-    graph_directed=analyzer['airports_directed']
-    mod_graph=djk.Dijkstra(graph_directed, airorigin)
-    distance_to_airport=djk.distTo(mod_graph, airdestination)
-    inside_routes=djk.pathTo(mod_graph, airdestination)
-    lst_weights=lt.newList("ARRAY_LIST")
-    i=1
-    j=2
-    while j <= lt.size(inside_routes):
-        first=lt.getElement(inside_routes,i)
-        second=lt.getElement(inside_routes,j)
-        edge=gr.getEdge(graph_directed,first,second)
-        lt.addLast(lst_weights,edge['weight'])
-        i+=1 
-        j+=1
-    return (distance_to_airport, lst_weights)
+    return (distance_to_airport, inside_routes)
 
 
 # REQ 4
