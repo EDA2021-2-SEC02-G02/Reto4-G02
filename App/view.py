@@ -87,7 +87,6 @@ def optionOne(cont):
     graph=cont['airports_directed']
     airport=cont['airports']
     sublist=lt.subList(listmore,1,5)
-    print (sublist)
     for iata in lt.iterator(sublist):
         for air in lt.iterator(airport):
             if air["IATA"]==iata[0]:
@@ -115,7 +114,7 @@ def optionTwo(cont):
     
 def optionFive(cont):
     listairports=cont['airports']
-    iata=input("Ingrese el código IATA del aeropuerto cerrado: ")0
+    iata=input("Ingrese el código IATA del aeropuerto cerrado: ")
     listanswer=controller.airclosed(cont,iata)
     numafected=lt.size(listanswer)
     threefirst=lt.subList(listanswer,1,3)
@@ -194,7 +193,7 @@ while True:
      
     
     elif int(inputs[0]) == 4:
-        
+        pass
 
     elif int(inputs[0]) == 5:
         optionFive(cont)

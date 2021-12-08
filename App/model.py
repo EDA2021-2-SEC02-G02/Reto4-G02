@@ -388,6 +388,7 @@ def min_distance(analyzer,airorigin,airdestination):
 
 # REQ 5
 def airclosed(analyzer, iata):
+    outair=None
     dirgraph=analyzer['airports_directed']
     nodesgraph=gr.vertices(dirgraph)
     if iata in lt.iterator (nodesgraph):
