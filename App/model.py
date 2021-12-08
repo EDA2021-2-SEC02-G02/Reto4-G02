@@ -426,26 +426,6 @@ def min_distance(analyzer, airorigin, airdestination):
     mod_graph = djk.Dijkstra(graph_directed, airorigin)
     distance_to_airport = djk.distTo(mod_graph, airdestination)
     inside_routes = djk.pathTo(mod_graph, airdestination)
-
-    """
-    lst_weights = lt.newList("ARRAY_LIST")
-    
-    print(inside_routes)
-    
-    if lt.size(inside_routes) == 1:
-        return distance_to_airport, inside_routes
-    else:
-        i = 1
-        j = 2
-        while j <= lt.size(inside_routes):
-            first = lt.getElement(inside_routes, i)
-            second = lt.getElement(inside_routes, j)
-            edge = gr.getEdge(graph_directed, first, second)
-            lt.addLast(lst_weights, edge["weight"])
-            i += 1
-            j += 1
-    """
-
     return (distance_to_airport, inside_routes)
 
 
