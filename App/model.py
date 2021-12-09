@@ -37,6 +37,8 @@ from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.ADT import orderedmap as om
+from DISClib.Algorithms.Graphs import prim as prim
+from DISClib.Algorithms.Graphs import dfs as dfs
 from math import radians, cos, sin, asin, sqrt
 assert cf
 
@@ -430,6 +432,16 @@ def min_distance(analyzer, airorigin, airdestination):
 
 
 # REQ 4
+def traveler (analyzer,cityOrigin,miles):
+    graph_directed= analyzer["airports_directed"]
+    mst= prim.PrimMST(graph_directed)
+    listaArcos= prim.weightMST(graph_directed, cityOrigin)
+    x= dfs.DepthFirstSearch(graph_directed,listaArcos)
+    listaRutas= dfs.pathTo(listaArcos,x)
+    maximo= max(listaRutas)
+    return maximo
+
+
 
 # REQ 5
 def airclosed(analyzer, iata):
